@@ -100,7 +100,12 @@ BOOL CSynchronizationDlg::OnInitDialog()
         DestroyWindow();
     }
 
-    hMasterOfflineEvent = CreateEvent(NULL, TRUE, FALSE, _T("MasterOfflineEvt"));
+    /**
+     * Use auto reset to prevent concurrent master election
+     *
+     * Note: from now on, INTERPROCESSDATA::nMasters can be eliminated
+     */
+    hMasterOfflineEvent = CreateEvent(NULL, FALSE, FALSE, _T("MasterOfflineEvt"));
     if (!hMasterOfflineEvent)
     {
         ShowErrorMessage(_T("Cannot create event"), GetLastError());
